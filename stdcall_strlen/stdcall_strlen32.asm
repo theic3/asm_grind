@@ -6,8 +6,7 @@ _start:
     sub esp, 0x4 ; create space on stack
     mov DWORD [esp], msg ; move msg to dereferenced esp
     call _strlen
-    add esp, 0x4 ; clean up stack
-    push eax ; push return value
+    jmp _exit
 
 _strlen:
     push ebp ; prologue 
@@ -28,7 +27,11 @@ _strlen_exit:
     mov eax, ecx ; move the counter to eax (ret val)
     mov esp, ebp ; epilogue
     pop ebp
-    ret 
+    ret 4 ; clean up the stack (callee)
+
+_exit:
+    mov eax, 0x1
+    int 0x80
 
 section .data  
-    msg db "hirj", 0h
+    msg db "wownice", 0h
