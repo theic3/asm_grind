@@ -12,16 +12,17 @@ _start:
 _strlen:
     push ebp ; prologue 
     mov ebp, esp
-    sub esp, 0x8 ; create space on the stack
-    mov DWORD [esp+0x4], 0x0 ; set counter to 0
     mov edx, [ebp+0x8] ; move pointer to msg to edx
-    mov DWORD [esp], edx ; move pointer to msg to dereferenced esp
-    mov ecx, [esp+0x4] ; move counter to ecx
+    mov ecx, 0x0 ; move counter to ecx
     jmp _strlen_loop
 
 _strlen_loop:
-    add ecx, 1 ; increment counter
     cmp byte [edx+ecx], 0x0 ; check byte at [(msg*+index)] if its null '\0'
+    je _strlen_exit
+
+_inc_counter:
+    add ecx, 1
+    cmp byte [edx+ecx], 0x0
     jne _strlen_loop
 
 _strlen_exit:
@@ -32,7 +33,8 @@ _strlen_exit:
 
 _exit:
     mov eax, 0x1
+    mov edi, 0x0
     int 0x80
 
 section .data  
-    msg db "hi_rj!", 0h
+    msg db `\0aaaa`, 0h
